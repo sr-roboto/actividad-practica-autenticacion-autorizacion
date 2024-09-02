@@ -1,44 +1,7 @@
-import cors from 'cors';
-import express from 'express';
-import session from 'express-session';
-import morgan from 'morgan';
-import path from 'path';
-import { connectDB } from './db.js';
-import { User } from './user.model.js';
-
-const app = express();
-const PORT = process.env.PORT || 4000;
-
-const __dirname = path.resolve();
-
-// Middlewares
-app.use(
-  cors({
-    // Permitir solicitudes desde el front-end
-    origin: ['http://localhost:5500', 'http://localhost:3000'],
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    credentials: true, // Habilitar envío de cookies
-  })
-);
-app.use(morgan('dev'));
-app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public')));
-
-app.use(
-  session({
-    secret: 'mi-string-secreto3215',
-    resave: false,
-    saveUninitialized: true,
-    cookie: {
-      secure: false, // true solo si usas HTTPS
-      httpOnly: true, // evita acceso a cookie desde JavaScript del cliente
-      // sameSite: 'lax' // permite envío de cookies en navegadores modernos
-    },
-  })
-);
+import { User } from '../models/user.model.js';
 
 // Ruta para manejar el registro de usuarios
-app.post('/register', async (req, res) => {
+const register = async (req, res) => {
   const { username, password } = req.body;
 
   // Verificar si el usuario ya existe
@@ -53,10 +16,10 @@ app.post('/register', async (req, res) => {
   const newUser = new User({ username, password });
   newUser.save();
   res.json({ message: 'Usuario creado exitosamente' });
-});
+};
 
 // Ruta para manejar el inicio de sesión
-app.post('/login', async (req, res) => {
+const login = async (req, res) => {
   const { username, password } = req.body;
 
   // Buscar usuario
@@ -77,10 +40,10 @@ app.post('/login', async (req, res) => {
   } else {
     return res.status(401).json({ message: 'Credenciales incorrectas' });
   }
-});
+};
 
 // Ruta para obtener los datos de la sesión
-app.get('/session', (req, res) => {
+const session = async (req, res) => {
   if (req.session.userId) {
     return res.json({
       loggedIn: true,
@@ -91,10 +54,10 @@ app.get('/session', (req, res) => {
       .status(401)
       .json({ loggedIn: false, message: 'No hay sesión activa' });
   }
-});
+};
 
 // Ruta para cerrar la sesión
-app.post('/logout', (req, res) => {
+const logout = async (req, res) => {
   console.log(req.session);
   req.session.destroy((err) => {
     if (err) {
@@ -103,9 +66,6 @@ app.post('/logout', (req, res) => {
     res.clearCookie('connect.sid'); // Nombre de cookie por defecto para express-session
     return res.json({ message: 'Sesión cerrada exitosamente' });
   });
-});
+};
 
-app.listen(PORT, () => {
-  connectDB();
-  console.log(`Server running on http://localhost:${PORT}/`);
-});
+export { register, login, session, logout };
