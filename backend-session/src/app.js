@@ -1,10 +1,10 @@
 import cors from 'cors';
 import express from 'express';
-import session from 'express-session';
 import morgan from 'morgan';
 import path from 'path';
 
 import { authRoutes } from './routes/auth.routes.js';
+import { validateSession } from './middlewares/session.validate.js';
 
 const app = express();
 
@@ -22,19 +22,7 @@ app.use(
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
-
-app.use(
-  session({
-    secret: 'mi-string-secreto3215',
-    resave: false,
-    saveUninitialized: true,
-    cookie: {
-      secure: false, // true solo si usas HTTPS
-      httpOnly: true, // evita acceso a cookie desde JavaScript del cliente
-      // sameSite: 'lax' // permite envío de cookies en navegadores modernos
-    },
-  })
-);
+app.use(validateSession);
 
 app.use('/api', authRoutes);
 

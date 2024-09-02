@@ -5,6 +5,7 @@ import {
   session,
   logout,
 } from '../controllers/auth.controllers.js';
+import { validateSession } from '../middlewares/session.validate.js';
 const authRoutes = Router();
 
 authRoutes.post('/auth/register', register);
