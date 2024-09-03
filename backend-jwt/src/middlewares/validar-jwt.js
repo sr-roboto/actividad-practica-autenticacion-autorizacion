@@ -12,7 +12,7 @@ export default async (req, res, next) => {
     return res.status(403).json({ message: 'Token no proporcionado' });
   }
   const decoded = jwt.verify(token, SECRET_KEY);
-  console.log(decoded);
+  console.log(decoded.userId);
   // Se busca al usuario en la base de datos
   const connection = await connectDB();
   const [result] = await connection.execute(

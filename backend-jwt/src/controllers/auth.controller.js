@@ -1,5 +1,4 @@
 import generarJwt from '../helpers/generar-jwt.js';
-import { connectDB } from '../database/db.js';
 import { registerService, loginService } from '../services/auth.service.js';
 
 // Endpoint de registro de sesión (register)
@@ -18,13 +17,13 @@ const register = async (req, res) => {
 const login = async (req, res) => {
   const { username, password } = req.body;
   try {
-    await loginService(username, password);
+    const user = await loginService(username, password);
     // Validación de usuario
-    if (!loginService) {
+    if (!user) {
       return res.status(401).json({ message: 'Credenciales incorrectas' });
     }
     // Generar token JWT
-    const token = await generarJwt(loginService.id);
+    const token = await generarJwt(user.id);
     // Almacenar el token en la sesión del servidor
     req.session.token = token;
     // Almacenar el token en una cookie segura
