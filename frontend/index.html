@@ -27,6 +27,9 @@
                                     required>
                                 <label for="password">Contraseña</label>
                             </div>
+                            <label for="">no tienes una cuenta?
+                                <a href="./register.html">Registrate</a>
+                            </label>
                             <button type="submit" class="btn btn-primary w-100">Ingresar</button>
                         </form>
                         <p id="message" class="text-danger mt-3"></p>
@@ -55,7 +58,7 @@
                 return;
             }
 
-            fetch('http://localhost:4000/login', {
+            fetch('http://localhost:4000/api/auth/login', {
                 method: 'POST',
                 credentials: 'include', // Importante para enviar las cookies de sesión
                 headers: {
@@ -64,30 +67,31 @@
                 body: JSON.stringify({ username, password })
             })
             try {
-                const response = await fetch('http://localhost:4000/session', {
+                const response = await fetch('http://localhost:4000/api/auth/session', {
                     credentials: 'include' // Importante para obtener las cookies de sesión
                 });
                 const divError = document.getElementById('message')
-                
-                if(!response.ok) {
+
+                if (!response.ok) {
                     divError.innerText = 'Credenciales inválidas';
                     divError.classList.add('bg-danger', 'text-white', 'text-center', 'rounded', 'p-2', 'mt-3');
-                    
+
                     setTimeout(() => {
                         divError.hidden = true;
                     }, 3500);
-                    
+
                     return;
                 }
-                
+
                 const data = await response.json();
                 console.log(data);
                 window.location.href = 'home.html';
-                
+
             } catch (error) {
 
             }
         });
+
     </script>
 </body>
 
