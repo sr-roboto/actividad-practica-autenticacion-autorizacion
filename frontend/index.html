@@ -57,18 +57,21 @@
         return;
       }
 
-      fetch('http://localhost:4000/api/auth/login', {
-        method: 'POST',
-        credentials: 'include', // Importante para enviar las cookies de sesión
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ username, password })
-      })
       try {
+        await fetch('http://localhost:4000/api/auth/login', {
+          method: 'POST',
+          credentials: 'include', // Importante para enviar las cookies de sesión
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ username, password })
+        })
+
         const response = await fetch('http://localhost:4000/api/auth/session', {
           credentials: 'include' // Importante para obtener las cookies de sesión
         });
+        console.log(response);
+
         const divError = document.getElementById('message')
 
         if (!response.ok) {
