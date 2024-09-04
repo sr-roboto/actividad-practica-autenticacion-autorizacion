@@ -8,7 +8,7 @@ document.getElementById('logout').addEventListener('click', async () => {
   if (!response.ok) {
     throw new Error('Error al cerrar sesión');
   } else {
-    window.location.href = 'index.html';
+    window.location.href = '../../../index.html';
   }
 });
 
@@ -21,6 +21,6 @@ const logout = async () => {
   if (!response.ok) {
     throw new Error('Error al cerrar sesión');
   } else {
-    window.location.href = 'index.html';
+    window.location.href = '../../../index.html';
   }
 };
