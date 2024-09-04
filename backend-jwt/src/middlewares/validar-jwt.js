@@ -3,7 +3,7 @@ import { SECRET_KEY } from '../configs/env.js';
 import { connectDB } from '../database/db.js';
 
 // Middleware para verificar el token JWT
-export default async (req, res, next) => {
+export const validarJWT = async (req, res, next) => {
   console.log(req.session);
   console.log('-----------');
   console.log(req.cookies);
